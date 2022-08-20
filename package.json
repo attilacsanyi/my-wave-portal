@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile": "npx hardhat compile",
+    "accounts": "npx hardhat accounts",
+    "clean": "npx hardhat clean",
     "test": "npx hardhat test",
     "run": "npx hardhat run scripts/run.js ",
     "node": "npx hardhat node"
