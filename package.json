@@ -9,7 +9,8 @@
     "clean": "npx hardhat clean",
     "test": "npx hardhat test",
     "run": "npx hardhat run scripts/run.js ",
-    "node": "npx hardhat node"
+    "node": "npx hardhat node",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost"
   },
   "keywords": ["web3", "solidity", "hardhat", "ethereum", "crypto"],
   "author": "",
