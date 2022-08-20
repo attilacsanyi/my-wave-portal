@@ -1,5 +1,5 @@
 const main = async () => {
-  const [owner, randomPerson] = await hre.ethers.getSigners();
+  const [owner, firstPerson, secondPerson] = await hre.ethers.getSigners();
   const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
   const waveContract = await waveContractFactory.deploy();
   await waveContract.deployed();
@@ -10,15 +10,33 @@ const main = async () => {
   let waveCount;
   waveCount = await waveContract.getTotalWaves();
 
+  // We wave at ourselves
   let waveTxn = await waveContract.wave();
   await waveTxn.wait();
 
+  // Only one wave so far from us
   waveCount = await waveContract.getTotalWaves();
 
-  waveTxn = await waveContract.connect(randomPerson).wave();
+  // Switch to first Person and wave
+  waveTxn = await waveContract.connect(firstPerson).wave();
   await waveTxn.wait();
 
+  /** 
+   * Wave count should be 2 so far (us and first Person)
+   * first Person address: 0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+   * */
   waveCount = await waveContract.getTotalWaves();
+  let firstPersonAddress = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8';
+
+  // Wave again with first Person
+  waveTxn = await waveContract.connect(firstPerson).wave();
+  await waveTxn.wait();
+
+  // Wave count from first Person is two at this stage 
+  waveCount = await waveContract.getTotalWavesFromAccount(firstPersonAddress);
+
+  // Number of unique wave count is 2 (us and 2 waves form first Person)
+  waveCount = await waveContract.getNumOfUniqueWaves();
 };
 
 const runMain = async () => {
