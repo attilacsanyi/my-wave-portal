@@ -9,7 +9,7 @@
     "run": "npx hardhat run scripts/run.js ",
     "node": "npx hardhat node"
   },
-  "keywords": [],
+  "keywords": ["web3", "solidity", "hardhat", "ethereum", "crypto"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
