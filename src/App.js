@@ -3,7 +3,7 @@ import "./App.css";
 
 const App = () => {
   /** Just a state variable we use to store our user's public wallet.*/
-  const [, setCurrentAccount] = useState("");
+  const [currentAccount, setCurrentAccount] = useState("");
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -22,13 +22,33 @@ const App = () => {
 
       if (accounts.length !== 0) {
         const account = accounts[0];
-        console.info(`Found an authorized account: ${account}"`);
+        console.info(`Found an authorized account: ${account}`);
         setCurrentAccount(account);
       } else {
         console.warn("No authorized account found!");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }
+  };
+
+  const connectWallet = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (!ethereum) {
+        alert("Get MetaMask!");
+        return;
+      }
+
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      console.info(`Connected account: ${accounts[0]}`);
+      setCurrentAccount(accounts[0]);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -60,6 +80,13 @@ const App = () => {
           </span>{" "}
           at me
         </button>
+
+        {/**If there is no currentAccount render this button */}
+        {!currentAccount && (
+          <button className="waveButton" onClick={connectWallet}>
+            Connect Wallet
+          </button>
+        )}
       </div>
     </div>
   );
