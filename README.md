@@ -1,16 +1,10 @@
 # Buildspace WavePortal
 
+**Deployed on Heroku**: https://wave-p0rtal.herokuapp.com/
+
 This project demonstrates a basic [Hardhat](https://hardhat.org/) use case while creating a sample **Solidity** Wave Portal. The frontend is React and Web3.
 
 The project is based on [Solidity Web3 App](https://buildspace.so/p/build-solidity-web3-app) buildspace course.
-
-### **Welcome!**
-To get started you need to run local Ethereum node via Hardhat and start the React app:
-
-1. Run `npm install` for installing dependencies
-2. Run `npm run node` to start Ethereum node locally
-3. Run `npm run start` to start React web3 app
-
 # Solidity - Hardhat
 
 This is the smart contract backend for Wave Portal written in Solidity.
