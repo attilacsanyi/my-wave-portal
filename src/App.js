@@ -6,6 +6,8 @@ import abi from "./utils/WavePortal.json";
 const App = () => {
   /** Just a state variable we use to store our user's public wallet.*/
   const [currentAccount, setCurrentAccount] = useState("");
+  const [mining, setMining] = useState(false);
+  const [waveTxn, setWaveTxn] = useState(false);
 
   /**
    * Create a variable here that holds the contract address after you deploy!
@@ -88,11 +90,14 @@ const App = () => {
         /*
          * Execute the actual wave from your smart contract
          */
+        setMining(true);
         const waveTxn = await wavePortalContract.wave();
         console.log("Mining...", waveTxn.hash);
-
+        setWaveTxn(waveTxn.hash);
+        
         await waveTxn.wait();
         console.log("Mined -- ", waveTxn.hash);
+        setMining(false);
 
         count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
@@ -115,14 +120,27 @@ const App = () => {
             doing sports.
           </p>
           <p>Connect your Ethereum wallet in order to wave at me!</p>
-        </div>
 
-        <button className="waveButton" onClick={wave}>
-          <span role="img" aria-label="wave">
-            👋
-          </span>{" "}
-          at me
-        </button>
+          {!mining && (
+            <button className="waveButton" onClick={wave}>
+              <span role="img" aria-label="wave">
+                👋
+              </span>{" "}
+              at me
+            </button>
+          )}
+
+          {mining && (
+            <p>
+              Mining your{" "}
+              <span role="img" aria-label="wave">
+                👋
+              </span>
+              {" ..."}
+              {waveTxn && (<span>({waveTxn})</span>)}
+            </p>
+          )}
+        </div>
 
         {/**If there is no currentAccount render this button */}
         {!currentAccount && (
