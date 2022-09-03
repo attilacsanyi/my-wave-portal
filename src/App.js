@@ -17,7 +17,7 @@ const App = () => {
   /**
    * Create a variable here that holds the contract address after you deploy!
    */
-  const contractAddress = "0x019B2457242fa843C501ddC01D0C9DC3B9304a71";
+  const contractAddress = "0x83C8b401161773E74Af3bd7279A7f23278Bc51B2";
   /**
    * Create a variable here that references the abi content!
    */
@@ -129,6 +129,39 @@ const App = () => {
     checkIfWalletIsConnected();
   }, [contractABI]);
 
+  /**
+ * Listen in for emitter events!
+ */
+useEffect(() => {
+  let wavePortalContract;
+
+  const onNewWave = (from, timestamp, message) => {
+    console.log("NewWave", from, timestamp, message);
+    setAllWaves(prevState => [
+      ...prevState,
+      {
+        address: from,
+        timestamp: new Date(timestamp * 1000),
+        message: message,
+      },
+    ]);
+  };
+
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+    wavePortalContract.on("NewWave", onNewWave);
+  }
+
+  return () => {
+    if (wavePortalContract) {
+      wavePortalContract.off("NewWave", onNewWave);
+    }
+  };
+}, [contractABI]);
+
   const wave = async () => {
     try {
       const { ethereum } = window;
@@ -149,7 +182,7 @@ const App = () => {
          */
         setMining(true);
         try {
-          const waveTxn = await wavePortalContract.wave(message);
+          const waveTxn = await wavePortalContract.wave(message, {gasLimit: 300000});
           console.log("Mining...", waveTxn.hash);
           setWaveTxn(waveTxn.hash);
 
