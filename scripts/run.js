@@ -1,11 +1,24 @@
 const main = async () => {
   const [owner, firstPerson, secondPerson] = await hre.ethers.getSigners();
   const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-  const waveContract = await waveContractFactory.deploy();
+  const waveContract = await waveContractFactory.deploy({
+    value: hre.ethers.utils.parseEther("0.1"), // Fund the contract at deploy time
+  });
   await waveContract.deployed();
 
   console.log("Contract deployed to:", waveContract.address);
   console.log("Contract deployed by:", owner.address);
+
+  /*
+   * Get Contract balance
+   */
+  let contractBalance = await hre.ethers.provider.getBalance(
+    waveContract.address
+  );
+  console.log(
+    "Contract balance:",
+    hre.ethers.utils.formatEther(contractBalance)
+  );
 
   let waveCount;
   waveCount = await waveContract.getTotalWaves();
@@ -16,6 +29,15 @@ const main = async () => {
 
   // Only one wave so far from us
   waveCount = await waveContract.getTotalWaves();
+
+  /*
+   * Get Contract balance to see what happened!
+   */
+  contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+  console.log(
+    "Reduced Contract balance after first wave:",
+    hre.ethers.utils.formatEther(contractBalance)
+  );
 
   // Switch to first Person and wave
   waveTxn = await waveContract.connect(firstPerson).wave('A message from first person!');
