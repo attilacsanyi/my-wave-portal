@@ -17,7 +17,7 @@ const App = () => {
   /**
    * Create a variable here that holds the contract address after you deploy!
    */
-  const contractAddress = "0x11aA522Dd539600432a039f7Badcfe6e9d30538a";
+  const contractAddress = "0x019B2457242fa843C501ddC01D0C9DC3B9304a71";
   /**
    * Create a variable here that references the abi content!
    */
@@ -148,12 +148,16 @@ const App = () => {
          * Execute the actual wave from your smart contract
          */
         setMining(true);
-        const waveTxn = await wavePortalContract.wave(message);
-        console.log("Mining...", waveTxn.hash);
-        setWaveTxn(waveTxn.hash);
+        try {
+          const waveTxn = await wavePortalContract.wave(message);
+          console.log("Mining...", waveTxn.hash);
+          setWaveTxn(waveTxn.hash);
 
-        await waveTxn.wait();
-        console.log("Mined -- ", waveTxn.hash);
+          await waveTxn.wait();
+          console.log("Mined -- ", waveTxn.hash);
+        } catch (e) {
+          // Need to wait
+        }
         setMining(false);
 
         count = await wavePortalContract.getTotalWaves();
