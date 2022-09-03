@@ -11,14 +11,14 @@ const main = async () => {
   waveCount = await waveContract.getTotalWaves();
 
   // We wave at ourselves
-  let waveTxn = await waveContract.wave();
+  let waveTxn = await waveContract.wave('A message from contract!');
   await waveTxn.wait();
 
   // Only one wave so far from us
   waveCount = await waveContract.getTotalWaves();
 
   // Switch to first Person and wave
-  waveTxn = await waveContract.connect(firstPerson).wave();
+  waveTxn = await waveContract.connect(firstPerson).wave('A message from first person!');
   await waveTxn.wait();
 
   /** 
@@ -29,7 +29,7 @@ const main = async () => {
   let firstPersonAddress = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8';
 
   // Wave again with first Person
-  waveTxn = await waveContract.connect(firstPerson).wave();
+  waveTxn = await waveContract.connect(firstPerson).wave('Second message from first person!');
   await waveTxn.wait();
 
   // Wave count from first Person is two at this stage 
@@ -37,6 +37,9 @@ const main = async () => {
 
   // Number of unique wave count is 2 (us and 2 waves form first Person)
   waveCount = await waveContract.getNumOfUniqueWaves();
+
+  let allWaves = await waveContract.getAllWaves();
+  console.log('allWaves', allWaves);
 };
 
 const runMain = async () => {
